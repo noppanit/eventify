@@ -1,5 +1,5 @@
 $(function() {
-	var w = 900, h = 700;
+	var w = 1300, h = 700;
 
 	var labelDistance = 0;
 

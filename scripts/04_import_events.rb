@@ -1,0 +1,250 @@
+require 'rubygems'
+require 'neography'
+require 'csv'
+require 'pp'
+require File.expand_path('../../server', __FILE__)
+
+csv_text = File.read("data/temp_events.csv")
+csv = CSV.parse(csv_text, :headers => true)
+events_index = $neo.get_node_index("events_index", "name", "events_index")[0]
+csv.each do |row|
+
+	event_id = row["event_id"]
+	user_id = row["user_id"]
+	start_time = row["start_time"]
+	city = row["city"]
+	state = row["state"]
+	zip = row["zip"]
+	country = row["country"]
+	lat = row["lat"]
+	lng = row["lng"]
+	c_1 = row["c_1"]
+	c_2 = row["c_2"]
+	c_3 = row["c_3"]
+	c_4 = row["c_4"]
+	c_5 = row["c_5"]
+	c_6 = row["c_6"]
+	c_7 = row["c_7"]
+	c_8 = row["c_8"]
+	c_9 = row["c_9"]
+	c_10 = row["c_10"]
+	c_11 = row["c_11"]
+	c_12 = row["c_12"]
+	c_13 = row["c_13"]
+	c_14 = row["c_14"]
+	c_15 = row["c_15"]
+	c_16 = row["c_16"]
+	c_17 = row["c_17"]
+	c_18 = row["c_18"]
+	c_19 = row["c_19"]
+	c_20 = row["c_20"]
+	c_21 = row["c_21"]
+	c_22 = row["c_22"]
+	c_23 = row["c_23"]
+	c_24 = row["c_24"]
+	c_25 = row["c_25"]
+	c_26 = row["c_26"]
+	c_27 = row["c_27"]
+	c_28 = row["c_28"]
+	c_29 = row["c_29"]
+	c_30 = row["c_30"]
+	c_31 = row["c_31"]
+	c_32 = row["c_32"]
+	c_33 = row["c_33"]
+	c_34 = row["c_34"]
+	c_35 = row["c_35"]
+	c_36 = row["c_36"]
+	c_37 = row["c_37"]
+	c_38 = row["c_38"]
+	c_39 = row["c_39"]
+	c_40 = row["c_40"]
+	c_41 = row["c_41"]
+	c_42 = row["c_42"]
+	c_43 = row["c_43"]
+	c_44 = row["c_44"]
+	c_45 = row["c_45"]
+	c_46 = row["c_46"]
+	c_47 = row["c_47"]
+	c_48 = row["c_48"]
+	c_49 = row["c_49"]
+	c_50 = row["c_50"]
+	c_51 = row["c_51"]
+	c_52 = row["c_52"]
+	c_53 = row["c_53"]
+	c_54 = row["c_54"]
+	c_55 = row["c_55"]
+	c_56 = row["c_56"]
+	c_57 = row["c_57"]
+	c_58 = row["c_58"]
+	c_59 = row["c_59"]
+	c_60 = row["c_60"]
+	c_61 = row["c_61"]
+	c_62 = row["c_62"]
+	c_63 = row["c_63"]
+	c_64 = row["c_64"]
+	c_65 = row["c_65"]
+	c_66 = row["c_66"]
+	c_67 = row["c_67"]
+	c_68 = row["c_68"]
+	c_69 = row["c_69"]
+	c_70 = row["c_70"]
+	c_71 = row["c_71"]
+	c_72 = row["c_72"]
+	c_73 = row["c_73"]
+	c_74 = row["c_74"]
+	c_75 = row["c_75"]
+	c_76 = row["c_76"]
+	c_77 = row["c_77"]
+	c_78 = row["c_78"]
+	c_79 = row["c_79"]
+	c_80 = row["c_80"]
+	c_81 = row["c_81"]
+	c_82 = row["c_82"]
+	c_83 = row["c_83"]
+	c_84 = row["c_84"]
+	c_85 = row["c_85"]
+	c_86 = row["c_86"]
+	c_87 = row["c_87"]
+	c_88 = row["c_88"]
+	c_89 = row["c_89"]
+	c_90 = row["c_90"]
+	c_91 = row["c_91"]
+	c_92 = row["c_92"]
+	c_93 = row["c_93"]
+	c_94 = row["c_94"]
+	c_95 = row["c_95"]
+	c_96 = row["c_96"]
+	c_97 = row["c_97"]
+	c_98 = row["c_98"]
+	c_99 = row["c_99"]
+	c_100 = row["c_100"]
+	c_other = row["c_other"]
+
+	event = $neo.create_node(
+			"event_id" => event_id,
+			# "user_id" => user_id,
+			"start_time" => start_time,
+			"city" => city,
+			"state" => state,
+			"zip" => zip,
+			"country" => country,
+			"lat" => lat,
+			"lng" => lng,
+			"c_1" => c_1,
+			"c_2" => c_2,
+			"c_3" => c_3,
+			"c_4" => c_4,
+			"c_5" => c_5,
+			"c_6" => c_6,
+			"c_7" => c_7,
+			"c_8" => c_8,
+			"c_9" => c_9,
+			"c_10" => c_10,
+			"c_11" => c_11,
+			"c_12" => c_12,
+			"c_13" => c_13,
+			"c_14" => c_14,
+			"c_15" => c_15,
+			"c_16" => c_16,
+			"c_17" => c_17,
+			"c_18" => c_18,
+			"c_19" => c_19,
+			"c_20" => c_20,
+			"c_21" => c_21,
+			"c_22" => c_22,
+			"c_23" => c_23,
+			"c_24" => c_24,
+			"c_25" => c_25,
+			"c_26" => c_26,
+			"c_27" => c_27,
+			"c_28" => c_28,
+			"c_29" => c_29,
+			"c_30" => c_30,
+			"c_31" => c_31,
+			"c_32" => c_32,
+			"c_33" => c_33,
+			"c_34" => c_34,
+			"c_35" => c_35,
+			"c_36" => c_36,
+			"c_37" => c_37,
+			"c_38" => c_38,
+			"c_39" => c_39,
+			"c_40" => c_40,
+			"c_41" => c_41,
+			"c_42" => c_42,
+			"c_43" => c_43,
+			"c_44" => c_44,
+			"c_45" => c_45,
+			"c_46" => c_46,
+			"c_47" => c_47,
+			"c_48" => c_48,
+			"c_49" => c_49,
+			"c_50" => c_50,
+			"c_51" => c_51,
+			"c_52" => c_52,
+			"c_53" => c_53,
+			"c_54" => c_54,
+			"c_55" => c_55,
+			"c_56" => c_56,
+			"c_57" => c_57,
+			"c_58" => c_58,
+			"c_59" => c_59,
+			"c_60" => c_60,
+			"c_61" => c_61,
+			"c_62" => c_62,
+			"c_63" => c_63,
+			"c_64" => c_64,
+			"c_65" => c_65,
+			"c_66" => c_66,
+			"c_67" => c_67,
+			"c_68" => c_68,
+			"c_69" => c_69,
+			"c_70" => c_70,
+			"c_71" => c_71,
+			"c_72" => c_72,
+			"c_73" => c_73,
+			"c_74" => c_74,
+			"c_75" => c_75,
+			"c_76" => c_76,
+			"c_77" => c_77,
+			"c_78" => c_78,
+			"c_79" => c_79,
+			"c_80" => c_80,
+			"c_81" => c_81,
+			"c_82" => c_82,
+			"c_83" => c_83,
+			"c_84" => c_84,
+			"c_85" => c_85,
+			"c_86" => c_86,
+			"c_87" => c_87,
+			"c_88" => c_88,
+			"c_89" => c_89,
+			"c_90" => c_90,
+			"c_91" => c_91,
+			"c_92" => c_92,
+			"c_93" => c_93,
+			"c_94" => c_94,
+			"c_95" => c_95,
+			"c_96" => c_96,
+			"c_97" => c_97,
+			"c_98" => c_98,
+			"c_99" => c_99,
+			"c_100" => c_100,
+			"c_other" => c_other
+		)
+
+	user_finder = UserFinder.new
+	user_node = user_finder.find_by_id(user_id)
+
+	if user_node
+		$neo.create_relationship("has_event", events_index, event)
+		$neo.create_relationship("created", user_node, event)
+
+		pp "#{user_node["self"]} created #{event["self"]}" 
+	end		
+
+
+end
+
+puts "Done..."
+
