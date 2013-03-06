@@ -24,4 +24,10 @@ describe "User finder" do
 		users = user_finder.get_friends
 	end
 
+	it "should get events I should go" do
+		user_finder = UserFinder.new
+		users = user_finder.get_event_i_should_go	
+		users.should_not eql nil
+	end
+
 end

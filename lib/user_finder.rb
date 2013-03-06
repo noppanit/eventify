@@ -29,4 +29,23 @@ class UserFinder
 
 		return results.map{|user| User.new(user.first, user.last).to_json}
 	end
+
+	def get_event_i_should_go
+		query = "START users_index=node:users_index(name='users_index') \
+			MATCH users_index-[:has_user]-users-[:friend_with]-friends-[:created]-events \
+			RETURN users.user_id, collect(distinct events.event_id), collect(distinct friends.user_id) \
+			LIMIT 20"
+		results = $neo.execute_query(query)["data"]
+
+		data = results.map{|result|
+			{
+				"user" => result[0],
+				"events" => result[1],
+				"friends" => result[2]
+			}
+		}
+
+		
+		return data
+	end
 end

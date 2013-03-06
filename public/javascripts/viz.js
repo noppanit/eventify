@@ -1,4 +1,6 @@
 $(function() {
+	$("body").css("background", "#000");
+
 	var w = 1300, h = 700;
 
 	var labelDistance = 0;
@@ -11,97 +13,85 @@ $(function() {
 	var links = [];
 
 	d3.json(
-		'http://127.0.0.1:9393/get_friends',
+		'http://127.0.0.1:9393/event_i_should_go',
 		function (jsondata) {
-
-			$.each(jsondata, function(index, value) {
+			
+			data = jsondata[9];
 				
-				user = $.parseJSON(value); 
-				var user_node = {
-					label : user.user_id
+			user = data;
+			
+			var user_node = {
+				label : "myself"
+			};
+
+			nodes.push(user_node);
+			
+			$.each(user.friends, function(index, friend_id) {
+				var friend_node = {
+					label : "friend_"+friend_id
 				};
 
-				nodes.push(user_node);
+				nodes.push(friend_node);
 				
-				// labelAnchors.push({
-				// 	node : node
-				// });
-				// labelAnchors.push({
-				// 	node : node
-				// });
-				
-				$.each(user.friend_ids, function(index, friend_id) {
-					var friend_node = {
-						label : friend_id
-					};
-
-					nodes.push(friend_node);
-					
-					links.push({
-						source : user_node,
-						target : friend_node,
-						weight : Math.random()
-					});
-
-
-					// labelAnchorLinks.push({
-					// 	source : index * 2,
-					// 	target : index * 2 + 1,
-					// 	weight : 1
-					// });
+				links.push({
+					source : user_node,
+					target : friend_node,
+					weight : Math.random(),
+					label : "friend_with"
 				});
 
-				// console.log(links);
-				
-			});	
-
-	
-			// for(var i = 0; i < nodes.length; i++) {
-			// 	for(var j = 0; j < i; j++) {
-			// 		if(Math.random() > .95)
-			// 			links.push({
-			// 				source : i,
-			// 				target : j,
-			// 				weight : Math.random()
-			// 			});
-			// 	}
-			// 	labelAnchorLinks.push({
-			// 		source : i * 2,
-			// 		target : i * 2 + 1,
-			// 		weight : 1
-			// 	});
-			// };
-
-			var force = d3.layout.force().size([w, h]).nodes(nodes).links(links).gravity(1).linkDistance(50).charge(-3000).linkStrength(function(x) {
-					return x.weight * 10
 			});
 
 
+			$.each(user.events, function(index, event_id) {
+				var event_node = {
+					label : "event_"+event_id
+				};
+
+				nodes.push(event_node);
+				
+				links.push({
+					source : user_node,
+					target : event_node,
+					weight : Math.random(),
+					label : "created"
+				});
+
+			});
+
+			var force = d3.layout.force().size([w, h]).nodes(nodes).links(links).gravity(1).linkDistance(300).charge(-40000).linkStrength(function(x) {
+					return x.weight * 10
+			});
+
 			force.start();
 
-			var force2 = d3.layout.force().nodes(labelAnchors).links(labelAnchorLinks).gravity(0).linkDistance(0).linkStrength(8).charge(-100).size([w, h]);
-			force2.start();
+			var link = vis.selectAll("line.link")
+				.data(links);
 
-			var link = vis.selectAll("line.link").data(links).enter().append("svg:line").attr("class", "link").style("stroke", "#CCC");
+			link.enter().insert("svg:line")
+				.attr("class", "link")
+				.style("fill", "#000")
+				.style("stroke-width", 2)
+				.style("stroke", "#CCC");
+
+			link.enter().insert("svg:text")
+				.style("fill", "#FFF")
+				.style("font-family", "Arial")
+				.style("font-size", 12)
+				.attr("class", "linkText")
+				.attr("y", 5)
+				.attr("text-anchor", "middle")
+		  		.attr("dx", function(d) { return (d.source.x + d.target.x) / 2; })
+				.attr("dy", function(d) { return (d.source.y + d.target.y) / 2; })
+				.text(function(d) { return d.label; });
+
 
 			var node = vis.selectAll("g.node").data(force.nodes()).enter().append("svg:g").attr("class", "node");
-			// node.append("svg:image").attr("width", 50)
-			//      .attr("height", 50)
-			//      .attr("y", 5)
-			//      .attr("x", 5)      
-			//      .attr("style", "border:1px solid black;border-radius: 15px;")
-			//      .attr("xlink:href", "http://lorempixel.com/50/50/people");
-			node.append("svg:circle").attr("r", 5).style("fill", "#555").style("stroke", "#FFF").style("stroke-width", 3);
+			node.append("svg:circle").attr("r", 15).style("fill", "#FF8800").style("stroke", "#FFF").style("stroke-width", 3);
+			node.append("svg:text").text(function(d, i) {
+				return d.label;
+			}).style("fill", "#E32636").style("font-family", "Arial").style("font-size", 12).attr("y", 30);
 			node.call(force.drag);
-
-
-			var anchorLink = vis.selectAll("line.anchorLink").data(labelAnchorLinks)//.enter().append("svg:line").attr("class", "anchorLink").style("stroke", "#999");
-
-			var anchorNode = vis.selectAll("g.anchorNode").data(force2.nodes()).enter().append("svg:g").attr("class", "anchorNode");
-			anchorNode.append("svg:circle").attr("r", 2).style("fill", "#FFF");
-				anchorNode.append("svg:text").text(function(d, i) {
-				return i % 2 == 0 ? "" : d.node.label
-			}).style("fill", "#555").style("font-family", "Arial").style("font-size", 12);
 
 			var updateLink = function() {
 				this.attr("x1", function(d) {
@@ -125,35 +115,21 @@ $(function() {
 
 
 			force.on("tick", function() {
-
-				force2.start();
-
 				node.call(updateNode);
-
-				anchorNode.each(function(d, i) {
-					if(i % 2 == 0) {
-						d.x = d.node.x;
-						d.y = d.node.y;
-					} else {
-						var b = this.childNodes[1].getBBox();
-
-						var diffX = d.x - d.node.x;
-						var diffY = d.y - d.node.y;
-
-						var dist = Math.sqrt(diffX * diffX + diffY * diffY);
-
-						var shiftX = b.width * (diffX - dist) / (dist * 2);
-						shiftX = Math.max(-b.width, Math.min(0, shiftX));
-						var shiftY = 5;
-						this.childNodes[1].setAttribute("transform", "translate(" + shiftX + "," + shiftY + ")");
-					}
+			
+				vis.selectAll("line.link").attr("x1", function(d) {
+					return d.source.x;
+				}).attr("y1", function(d) {
+					return d.source.y;
+				}).attr("x2", function(d) {
+					return d.target.x;
+				}).attr("y2", function(d) {
+					return d.target.y;
 				});
 
-
-				anchorNode.call(updateNode);
-
-				link.call(updateLink);
-				anchorLink.call(updateLink);
+				vis.selectAll("text.linkText")
+					.attr("dx", function(d) { return (d.source.x + d.target.x) / 2; })
+					.attr("dy", function(d) { return (d.source.y + d.target.y) / 2; });
 
 			});
 
